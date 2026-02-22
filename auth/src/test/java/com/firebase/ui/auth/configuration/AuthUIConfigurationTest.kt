@@ -88,6 +88,7 @@ class AuthUIConfigurationTest {
         assertThat(config.isNewEmailAccountsAllowed).isTrue()
         assertThat(config.isDisplayNameRequired).isTrue()
         assertThat(config.isProviderChoiceAlwaysShown).isFalse()
+        assertThat(config.isEmailVerificationRequired).isTrue()
     }
 
     @Test
@@ -129,6 +130,7 @@ class AuthUIConfigurationTest {
             isNewEmailAccountsAllowed = false
             isDisplayNameRequired = false
             isProviderChoiceAlwaysShown = true
+            isEmailVerificationRequired = false
         }
 
         assertThat(config.context).isEqualTo(applicationContext)
@@ -147,6 +149,7 @@ class AuthUIConfigurationTest {
         assertThat(config.isNewEmailAccountsAllowed).isFalse()
         assertThat(config.isDisplayNameRequired).isFalse()
         assertThat(config.isProviderChoiceAlwaysShown).isTrue()
+        assertThat(config.isEmailVerificationRequired).isFalse()
     }
 
     @Test
@@ -463,7 +466,8 @@ class AuthUIConfigurationTest {
             "passwordResetActionCodeSettings",
             "isNewEmailAccountsAllowed",
             "isDisplayNameRequired",
-            "isProviderChoiceAlwaysShown"
+            "isProviderChoiceAlwaysShown",
+            "isEmailVerificationRequired"
         )
 
         val actualProperties = allProperties.map { it.name }.toSet()

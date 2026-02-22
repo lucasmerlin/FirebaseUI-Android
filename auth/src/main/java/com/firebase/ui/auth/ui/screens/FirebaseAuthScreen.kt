@@ -106,7 +106,14 @@ fun FirebaseAuthScreen(
     val stringProvider = DefaultAuthUIStringProvider(context)
     val navController = rememberNavController()
 
-    val authState by authUI.authStateFlow().collectAsState(AuthState.Idle)
+    val rawAuthState by authUI.authStateFlow().collectAsState(AuthState.Idle)
+    // When email verification is not required, treat unverified users as successfully signed in
+    val authState = if (!configuration.isEmailVerificationRequired && rawAuthState is AuthState.RequiresEmailVerification) {
+        val state = rawAuthState as AuthState.RequiresEmailVerification
+        AuthState.Success(result = null, user = state.user, isNewUser = false)
+    } else {
+        rawAuthState
+    }
     val dialogController = rememberTopLevelDialogController(stringProvider, authState)
     val lastSuccessfulUserId = remember { mutableStateOf<String?>(null) }
     val pendingLinkingCredential = remember { mutableStateOf<AuthCredential?>(null) }

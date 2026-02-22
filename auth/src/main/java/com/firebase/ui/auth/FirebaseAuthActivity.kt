@@ -97,7 +97,13 @@ class FirebaseAuthActivity : ComponentActivity() {
 
         // Observe auth state to automatically finish when done
         lifecycleScope.launch {
-            authUI.authStateFlow().collect { state ->
+            authUI.authStateFlow().collect { rawState ->
+                // When email verification is not required, treat unverified users as signed in
+                val state = if (!configuration.isEmailVerificationRequired && rawState is AuthState.RequiresEmailVerification) {
+                    AuthState.Success(result = null, user = rawState.user, isNewUser = false)
+                } else {
+                    rawState
+                }
                 when (state) {
                     is AuthState.Success -> {
                         // User signed in successfully

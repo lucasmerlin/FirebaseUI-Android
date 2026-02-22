@@ -49,6 +49,7 @@ class AuthUIConfigurationBuilder {
     var isNewEmailAccountsAllowed: Boolean = true
     var isDisplayNameRequired: Boolean = true
     var isProviderChoiceAlwaysShown: Boolean = false
+    var isEmailVerificationRequired: Boolean = true
 
     fun providers(block: AuthProvidersBuilder.() -> Unit) =
         providers.addAll(AuthProvidersBuilder().apply(block).build())
@@ -112,7 +113,8 @@ class AuthUIConfigurationBuilder {
             passwordResetActionCodeSettings = passwordResetActionCodeSettings,
             isNewEmailAccountsAllowed = isNewEmailAccountsAllowed,
             isDisplayNameRequired = isDisplayNameRequired,
-            isProviderChoiceAlwaysShown = isProviderChoiceAlwaysShown
+            isProviderChoiceAlwaysShown = isProviderChoiceAlwaysShown,
+            isEmailVerificationRequired = isEmailVerificationRequired
         )
     }
 }
@@ -195,4 +197,12 @@ class AuthUIConfiguration(
      * Always shows the provider selection screen, even if only one is enabled.
      */
     val isProviderChoiceAlwaysShown: Boolean = false,
+
+    /**
+     * Requires new email/password users to verify their email before being
+     * considered fully signed in. When true, unverified email/password users
+     * will see a verification screen. When false, sign-up completes immediately
+     * without requiring email verification. Defaults to true.
+     */
+    val isEmailVerificationRequired: Boolean = true,
 )

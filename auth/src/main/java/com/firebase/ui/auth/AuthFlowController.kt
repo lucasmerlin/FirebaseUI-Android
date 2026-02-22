@@ -25,6 +25,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -127,7 +128,17 @@ class AuthFlowController internal constructor(
     val authStateFlow: Flow<AuthState>
         get() {
             checkNotDisposed()
-            return authUI.authStateFlow()
+            return if (configuration.isEmailVerificationRequired) {
+                authUI.authStateFlow()
+            } else {
+                authUI.authStateFlow().map { state ->
+                    if (state is AuthState.RequiresEmailVerification) {
+                        AuthState.Success(result = null, user = state.user, isNewUser = false)
+                    } else {
+                        state
+                    }
+                }
+            }
         }
 
     /**
