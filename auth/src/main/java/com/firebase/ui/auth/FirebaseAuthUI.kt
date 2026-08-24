@@ -24,8 +24,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -495,7 +493,7 @@ class FirebaseAuthUI private constructor(
             }
 
             return instanceCache.getOrPut(DEFAULT_APP_KEY) {
-                FirebaseAuthUI(defaultApp, Firebase.auth)
+                FirebaseAuthUI(defaultApp, FirebaseAuth.getInstance(defaultApp))
             }
         }
 
@@ -519,7 +517,7 @@ class FirebaseAuthUI private constructor(
         fun getInstance(app: FirebaseApp): FirebaseAuthUI {
             val cacheKey = app.name
             return instanceCache.getOrPut(cacheKey) {
-                FirebaseAuthUI(app, Firebase.auth(app))
+                FirebaseAuthUI(app, FirebaseAuth.getInstance(app))
             }
         }
 
